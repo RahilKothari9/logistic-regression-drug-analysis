@@ -37,8 +37,12 @@ def preprocess_text(text):
     lemmatizer = WordNetLemmatizer()
     stop_words = set(stopwords.words('english'))
     
-    text = html.unescape(text) # Fix HTML artifacts
-    text = text.lower()
+    # --- NEW: Add custom stop words to handle the "leaks" ---
+    custom_stops = {'im', 'ive', 'dont', 'didnt', 'wont', 'cant', 'drug', 'pill', 'taking'}
+    stop_words.update(custom_stops)
+    # --------------------------------------------------------
+
+    text = html.unescape(text).lower()
     text = re.sub(r'<.*?>', '', text)
     text = re.sub(r'[^\w\s]', '', text)
     
