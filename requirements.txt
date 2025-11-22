@@ -4,3 +4,4 @@ scikit-learn
 nltk
 joblib
 matplotlib
+streamlit
