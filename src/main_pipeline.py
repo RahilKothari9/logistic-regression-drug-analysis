@@ -10,6 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import joblib
+import html
 
 # --- CONFIGURATION ---
 DATA_PATH = '../data/drug_reviews.csv' # Ensure this matches your file name
@@ -43,14 +44,17 @@ def preprocess_text(text):
     lemmatizer = WordNetLemmatizer()
     stop_words = set(stopwords.words('english'))
     
-    # 1. Lowercase
+    # 1. Decode HTML (Fixes the &#039; issue)
+    text = html.unescape(text)
+    
+    # 2. Lowercase
     text = text.lower()
     
-    # 2. Remove HTML tags & Punctuation using Regex
-    text = re.sub(r'<.*?>', '', text) # Remove HTML
-    text = re.sub(r'[^\w\s]', '', text) # Remove punctuation
+    # 3. Remove HTML tags (like <br>) & Punctuation
+    text = re.sub(r'<.*?>', '', text) 
+    text = re.sub(r'[^\w\s]', '', text)
     
-    # 3. Tokenize & Remove Stopwords & Lemmatize
+    # 4. Tokenize & Remove Stopwords & Lemmatize
     tokens = text.split()
     cleaned_tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]
     
